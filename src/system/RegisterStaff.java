@@ -6,12 +6,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Register implements ActionListener {
+public class RegisterStaff implements ActionListener {
     JFrame frame;
-    JTextField txtId, txtName;
+    JTextField txtId, txtPw;
     JButton btnBack, btnRegister;
 
-    Register() {
+    RegisterStaff() {
         //Frame
         frame = new JFrame();
         frame.setResizable(false);
@@ -23,7 +23,7 @@ public class Register implements ActionListener {
         //Title Panel
         JPanel pnlTitle = new JPanel();
         pnlTitle.setLayout(new FlowLayout());
-        JLabel lblTitle = new JLabel("Register Customer", SwingConstants.CENTER);
+        JLabel lblTitle = new JLabel("Register Staff", SwingConstants.CENTER);
         pnlTitle.add(lblTitle);
 
         //Form Panel
@@ -31,16 +31,15 @@ public class Register implements ActionListener {
         pnlForm.setLayout(new GridLayout(0, 2, 0, 10));
         pnlForm.setBorder(new EmptyBorder(10, 5, 10, 5));
         JPanel pnlId = new JPanel();
-        JLabel lblId = new JLabel("Student ID");
+        JLabel lblId = new JLabel("Username");
         txtId = new JTextField(15);
 
-        JPanel pnlName = new JPanel();
-        JLabel lblName = new JLabel("Name");
-        txtName = new JTextField(15);
+        JLabel lblPw = new JLabel("Password");
+        txtPw = new JTextField(15);
         pnlForm.add(lblId);
         pnlForm.add(txtId);
-        pnlForm.add(lblName);
-        pnlForm.add(txtName);
+        pnlForm.add(lblPw);
+        pnlForm.add(txtPw);
 
         //Button panel
         JPanel pnlButton = new JPanel();
@@ -59,25 +58,22 @@ public class Register implements ActionListener {
         frame.setVisible(true);
     }
 
-    public static void show() {
-        new Register();
+    public static void show(){
+        new RegisterStaff();
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
-
-            if (e.getSource().equals(btnRegister)) {
-                String id = txtId.getText();
-                String name = txtName.getText();
-                if ((id.equals("")) || (name.equals(""))) {
-                    JOptionPane.showMessageDialog(frame,
-                            "Please fill up the text fields.");
-                } else
-                    Operation.register(frame, id, name);
-            } else if (e.getSource().equals(btnBack)) {
-                frame.setVisible(false);
-                Index.frame.setVisible(true);
-            }
+        if (e.getSource().equals(btnRegister)) {
+            String id = txtId.getText();
+            String password = txtPw.getText();
+            if ((id.equals("")) || (password.equals(""))) {
+                JOptionPane.showMessageDialog(frame,
+                        "Please fill up the text fields.");
+            } else
+                Operation.registerStaff(frame, id, password);
+        } else if (e.getSource().equals(btnBack)) {
+            frame.setVisible(false);
+            Login.frame.setVisible(true);
         }
     }
-
+}

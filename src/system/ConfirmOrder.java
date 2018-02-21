@@ -7,10 +7,12 @@ import java.awt.event.ActionListener;
 
 public class ConfirmOrder implements ActionListener {
     JFrame frame;
-    JButton btnReturn, btnPurchase;
+    JButton btnBack, btnPurchase;
     ConfirmOrder(){
         //Frame
         frame = new JFrame();
+        frame.setResizable(false);
+        frame.setLocation(600, 300);
         frame.setSize(300,233);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -28,11 +30,11 @@ public class ConfirmOrder implements ActionListener {
         //Button panel
         JPanel pnlButton = new JPanel();
         pnlButton.setLayout(new FlowLayout());
-        btnReturn = new JButton("Edit Order");
+        btnBack = new JButton("Edit Order");
         btnPurchase = new JButton("Purchase");
-        btnReturn.addActionListener(this);
+        btnBack.addActionListener(this);
         btnPurchase.addActionListener(this);
-        pnlButton.add(btnReturn);
+        pnlButton.add(btnBack);
         pnlButton.add(btnPurchase);
 
         //add panels to frame
@@ -47,8 +49,10 @@ public class ConfirmOrder implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == btnReturn){
-            Menu.back();
+        if(e.getSource() == btnBack){
+            Operation.clearOrderList();
+            frame.setVisible(false);
+            Index.frame.setVisible(true);
         } else if(e.getSource()==btnPurchase){
             frame.setVisible(false);
             Payment.show();

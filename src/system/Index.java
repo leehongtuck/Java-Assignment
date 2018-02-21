@@ -7,11 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Index implements ActionListener {
-    JFrame frame;
+    static JFrame frame;
     JButton btnOrder, btnRegister, btnLogout;
 
     Index() {
         frame = new JFrame();
+        frame.setResizable(false);
+        frame.setLocation(600, 300);
         frame.setTitle("Index");
         frame.setSize(300, 233);
         frame.setLayout(new BorderLayout());
@@ -26,7 +28,7 @@ public class Index implements ActionListener {
 
         //Items Panel
         JPanel pnlItems = new JPanel();
-        pnlItems.setLayout(new GridLayout(2, 1, 10, 10));
+        pnlItems.setLayout(new GridLayout(3, 0, 10, 10));
         pnlItems.setBorder(new EmptyBorder(10, 10, 10, 10));
         btnOrder = new JButton("Take Order");
         btnRegister = new JButton("Register Customer");
@@ -51,11 +53,12 @@ public class Index implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(btnOrder)) {
-            String id;
-                id = JOptionPane.showInputDialog(
-                        frame, "Enter Customer Id");
+            String id = JOptionPane.showInputDialog(
+                    frame, "Enter Customer Id");
+            if (id != null){
+                Operation.validateCustomer(frame, id);
+            }
 
-            Operation.validateCustomer(frame, id);
         } else if (e.getSource().equals(btnRegister)) {
             Register.show();
             frame.setVisible(false);

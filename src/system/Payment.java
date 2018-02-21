@@ -9,10 +9,12 @@ import java.awt.event.ActionListener;
 public class Payment implements ActionListener{
     JFrame frame;
     JTextField txtRM100,txtRM50,txtRM20,txtRM10,txtRM5,txtRM1,txtSen50,txtSen20,txtSen10;
-
+    JButton btnPay, btnBack;
     Payment() {
         //Frame
         frame = new JFrame();
+        frame.setResizable(false);
+        frame.setLocation(600,300);
         frame.setSize(300, 300);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,8 +90,11 @@ public class Payment implements ActionListener{
         //Button panel
         JPanel pnlButton = new JPanel();
         pnlButton.setLayout(new FlowLayout());
-        JButton btnPay = new JButton("Pay");
+        btnPay = new JButton("Pay");
+        btnBack = new JButton("Cancer Order");
         btnPay.addActionListener(this);
+        btnBack.addActionListener(this);
+        pnlButton.add(btnBack);
         pnlButton.add(btnPay);
 
         //add panels to frame
@@ -105,11 +110,17 @@ public class Payment implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String totalAmount[] = {
-            txtRM100.getText(), txtRM50.getText(), txtRM20.getText(), txtRM10.getText(), txtRM5.getText(),
-            txtRM1.getText(), txtSen50.getText(), txtSen20.getText(), txtSen10.getText()
-        };
+        if (e.getSource().equals(btnPay)) {
+            String totalAmount[] = {
+                txtRM100.getText(), txtRM50.getText(), txtRM20.getText(), txtRM10.getText(), txtRM5.getText(),
+                txtRM1.getText(), txtSen50.getText(), txtSen20.getText(), txtSen10.getText()
+            };
 
-        Operation.processPayment(frame, totalAmount);
+            Operation.processPayment(frame, totalAmount);
+        }else if (e.getSource().equals(btnBack)){
+            Operation.clearOrderList();
+            frame.setVisible(false);
+            Index.frame.setVisible(true);
+        }
     }
 }

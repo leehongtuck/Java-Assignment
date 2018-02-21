@@ -5,26 +5,25 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Login implements ActionListener{
-    JFrame frame;
+    static JFrame frame;
     JTextField txtUsername;
     JPasswordField txtPw;
+    JButton btnLogin, btnRegister;
    Login(){
        //Frame
        frame = new JFrame();
-       frame.setSize(300,233);
+       frame.setResizable(false);
+       frame.setLocation(600,300);
+       frame.setSize(350,230);
        frame.setLayout(new BorderLayout());
        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
        //Title Panel
        JPanel pnlTitle = new JPanel();
        pnlTitle.setLayout(new FlowLayout());
-       JLabel lblTitle = new JLabel("Staff Login System",SwingConstants.CENTER);
+       JLabel lblTitle = new JLabel("Cafeteria Ordering System",SwingConstants.CENTER);
        pnlTitle.add(lblTitle);
 
        //Form Panel
@@ -47,8 +46,11 @@ public class Login implements ActionListener{
        //Button panel
        JPanel pnlButton = new JPanel();
        pnlButton.setLayout(new FlowLayout());
-       JButton btnLogin = new JButton("Login");
+       btnLogin = new JButton("Login");
        btnLogin.addActionListener(this);
+       btnRegister = new JButton("Register Staff");
+       btnRegister.addActionListener(this);
+       pnlButton.add(btnRegister);
        pnlButton.add(btnLogin);
 
        //add panels to frame
@@ -60,18 +62,18 @@ public class Login implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String staffUsername = txtUsername.getText();
-        String staffPw = String.valueOf(txtPw.getPassword());
-        boolean login = Operation.login(staffUsername, staffPw);
-        if(login){
-            JOptionPane.showMessageDialog(frame,
-                    "Login successful.");
-            Index.show();
-            frame.setVisible(false);
+        if (e.getSource().equals(btnLogin)) {
+            String staffUsername = txtUsername.getText();
+            String staffPw = String.valueOf(txtPw.getPassword());
+            if ((staffUsername.equals("")) || (staffPw.equals(""))) {
+                JOptionPane.showMessageDialog(frame,
+                        "Please fill up the text fields.");
+            }else
+            Operation.login(frame, staffUsername, staffPw);
 
-        }else{
-            JOptionPane.showMessageDialog(frame,
-                    "Username or Password do not match.");
+        }else if (e.getSource().equals(btnRegister)){
+            frame.setVisible(false);
+            RegisterStaff.show();
         }
 
     }
