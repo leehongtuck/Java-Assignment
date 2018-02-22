@@ -1,8 +1,4 @@
-TP041244
-[Nasi Lemak]
-2018-02-21T19:04:49.733766400+08:00[Asia/Singapore]
-
-TP041244
-[Nasi Lemak]
-2018-02-21T19:28:03.528669+08:00[Asia/Singapore]
+C001
+[Roti Canai]
+2018-02-22T23:05:47.138722700+08:00[Asia/Singapore]
 

@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Login implements ActionListener{
+public class Login extends JFrame implements ActionListener{
     static JFrame frame;
     JTextField txtUsername;
     JPasswordField txtPw;
@@ -73,7 +73,7 @@ public class Login implements ActionListener{
 
         }else if (e.getSource().equals(btnRegister)){
             frame.setVisible(false);
-            RegisterStaff.show();
+            new RegisterStaff();
         }
 
     }

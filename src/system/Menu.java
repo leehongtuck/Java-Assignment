@@ -106,7 +106,7 @@ public class Menu implements ActionListener {
                 ConfirmOrder.show();
             }
         } else if (e.getSource().equals(btnBack)) {
-            frame.setVisible(false);
+            frame.dispose();
             Index.frame.setVisible(true);
         }
 
@@ -115,9 +115,5 @@ public class Menu implements ActionListener {
 
     public static void show() {
         new Menu();
-    }
-
-    public static void back() {
-
     }
 }

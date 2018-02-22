@@ -6,12 +6,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Register implements ActionListener {
+public class EditCustomer implements ActionListener{
+    private String id;
     JFrame frame;
     JTextField txtId, txtName, txtPhone;
-    JButton btnBack, btnRegister;
+    JButton btnBack, btnUpdate;
 
-    Register() {
+    EditCustomer(String id, String name, String phone) {
+        this.id = id;
         //Frame
         frame = new JFrame();
         frame.setResizable(false);
@@ -23,7 +25,7 @@ public class Register implements ActionListener {
         //Title Panel
         JPanel pnlTitle = new JPanel();
         pnlTitle.setLayout(new FlowLayout());
-        JLabel lblTitle = new JLabel("Register Customer", SwingConstants.CENTER);
+        JLabel lblTitle = new JLabel("Edit Customer Details", SwingConstants.CENTER);
         pnlTitle.add(lblTitle);
 
         //Form Panel
@@ -31,15 +33,10 @@ public class Register implements ActionListener {
         pnlForm.setLayout(new GridLayout(0, 2, 0, 10));
         pnlForm.setBorder(new EmptyBorder(10, 5, 10, 5));
         JPanel pnlId = new JPanel();
-        JLabel lblId = new JLabel("Customer ID");
-        txtId = new JTextField(15);
-
         JLabel lblName = new JLabel("Name");
-        txtName = new JTextField(15);
+        txtName = new JTextField(name, 15);
         JLabel lblPhone = new JLabel("Phone Number");
-        txtPhone = new JTextField(15);
-        pnlForm.add(lblId);
-        pnlForm.add(txtId);
+        txtPhone = new JTextField(phone,15);
         pnlForm.add(lblName);
         pnlForm.add(txtName);
         pnlForm.add(lblPhone);
@@ -49,11 +46,11 @@ public class Register implements ActionListener {
         JPanel pnlButton = new JPanel();
         pnlButton.setLayout(new FlowLayout());
         btnBack = new JButton("Cancel");
-        btnRegister = new JButton("Register");
-        btnRegister.addActionListener(this);
+        btnUpdate = new JButton("Update Details");
+        btnUpdate.addActionListener(this);
         btnBack.addActionListener(this);
         pnlButton.add(btnBack);
-        pnlButton.add(btnRegister);
+        pnlButton.add(btnUpdate);
 
         //add panels to frame
         frame.add(pnlTitle, BorderLayout.NORTH);
@@ -62,26 +59,24 @@ public class Register implements ActionListener {
         frame.setVisible(true);
     }
 
-    public static void show() {
-        new Register();
+    public static void show(String id, String name, String phone) {
+        new EditCustomer(id, name, phone);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getSource().equals(btnRegister)) {
-            String id = txtId.getText();
+        if (e.getSource().equals(btnUpdate)) {
             String name = txtName.getText();
             String phone = txtPhone.getText();
-            if ((id.equals("")) || (name.equals("")) || (phone.equals(""))) {
+            if ((name.equals("")) || (phone.equals(""))) {
                 JOptionPane.showMessageDialog(frame,
                         "Please fill up the text fields.");
             } else
-                Operation.register(frame, id, name, phone);
+                Operation.updateCustomer(frame, id, name, phone);
         } else if (e.getSource().equals(btnBack)) {
             frame.dispose();
             Index.frame.setVisible(true);
         }
     }
 }
-

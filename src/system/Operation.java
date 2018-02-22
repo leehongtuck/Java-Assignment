@@ -14,6 +14,7 @@ public class Operation {
     private static ArrayList<Staff> staffList = new ArrayList<Staff>();
     private static ArrayList<Customer> customerList = new ArrayList<Customer>();
     private static ArrayList<Order> orderList = new ArrayList<Order>();
+    private static ArrayList<Staff> staffTemp = new ArrayList<Staff>();
     private static Customer currentCustomer;
     private static PrintWriter p;
 
@@ -59,8 +60,9 @@ public class Operation {
             while (sc.hasNext()) {
                 String id = sc.nextLine();
                 String name = sc.nextLine();
+                String phone = sc.nextLine();
                 sc.nextLine();
-                Customer c = new Customer(id, name);
+                Customer c = new Customer(id, name, phone);
                 customerList.add(c);
             }
         } catch (IOException ex) {
@@ -80,49 +82,68 @@ public class Operation {
 
     public static void registerStaff(JFrame frame, String id, String password) {
         try {
-            p = new PrintWriter(new FileWriter("staff.txt", true));
-
-        } catch (IOException e) {
-            System.out.println("File not found");
+            Scanner sc = new Scanner(new File("staff.txt"));
+            while (sc.hasNext()) {
+                String username = sc.nextLine();
+                String pw = sc.nextLine();
+                sc.nextLine();
+                Staff s = new Staff(username, pw);
+                staffTemp.add(s);
+            }
+        } catch (IOException ex) {
             File file = new File("staff.txt");
-            // if file doesnt exists, then create it
+            // if file doesnt exist, then create it
             try {
                 file.createNewFile();
-                p = new PrintWriter("staff.txt");
 
-            } catch (IOException ex) {
+            } catch (IOException e) {
                 System.out.println("File cant be created.");
             }
         } finally {
-            p.println(id);
-            p.println(password);
-            p.println();
-            p.close();
-            JOptionPane.showMessageDialog(frame,
-                    "You have successfully registered as a staff.");
-            frame.setVisible(false);
-            Login.frame.setVisible(true);
+            for (Staff s : staffTemp) {
+                if (id.equals(s.getUsername())) {
+                    JOptionPane.showMessageDialog(frame,
+                            "This username has been used.");
+                    return;
+                }
+            }
+            try {
+                p = new PrintWriter(new FileWriter("staff.txt", true));
+
+            } catch (IOException e) {
+                System.out.println("File not found");
+            } finally {
+                p.println(id);
+                p.println(password);
+                p.println();
+                p.close();
+                JOptionPane.showMessageDialog(frame,
+                        "You have successfully registered as a staff.");
+                frame.dispose();
+                Login.frame.setVisible(true);
+            }
         }
+
     }
 
-    public static void register(JFrame frame, String id, String name) {
+    public static void register(JFrame frame, String id, String name, String phone) {
 
         try {
             for (Customer c : customerList) {
                 if (id.equals(c.getId())) {
                     JOptionPane.showMessageDialog(frame,
-                            "This student Id has been registered. Please use a different one.");
+                            "This customer Id has been registered. Please use a different one.");
                     return;
                 }
             }
         } catch (NullPointerException e) {
             System.out.println("No records");
         }
-        Customer c = new Customer(id, name);
+        Customer c = new Customer(id, name, phone);
         customerList.add(c);
         JOptionPane.showMessageDialog(frame,
                 "You have successfully registered a customer.");
-        frame.setVisible(false);
+        frame.dispose();
         new Index();
     }
 
@@ -133,14 +154,47 @@ public class Operation {
             for (Customer c : customerList) {
                 p.println(c.getId());
                 p.println(c.getName());
+                p.println(c.getPhone());
                 p.println();
             }
             p.close();
         } catch (IOException e) {
 
         }
-        frame.setVisible(false);
+        customerList.clear();
+        frame.dispose();
         Login.frame.setVisible(true);
+    }
+
+    public static void editCustomer(JFrame frame, String id) {
+        try {
+            for (Customer c : customerList) {
+                if (id.equals(c.getId())) {
+                    currentCustomer = c;
+                    EditCustomer.show(c.getId(), c.getName(), c.getPhone());
+                    frame.setVisible(false);
+                    return;
+                }
+            }
+        } catch (NullPointerException e) {
+            return;
+        }
+        JOptionPane.showMessageDialog(frame,
+                "Your record does not exist, please register as a customer.");
+
+    }
+
+    public static void updateCustomer(JFrame frame, String id, String name, String phone) {
+        for (Customer c : customerList) {
+            if (id.equals(c.getId())) {
+                c.setName(name);
+                c.setPhone(phone);
+            }
+        }
+        JOptionPane.showMessageDialog(frame,
+                "Update Successful.");
+        frame.dispose();
+        Index.frame.setVisible(true);
     }
 
     public static void order(String menuItems[], double menuPrice[], int menuQty[]) {
@@ -154,16 +208,20 @@ public class Operation {
 
     public static void loadOrder(JPanel pnlOrderDetails) {
         pnlOrderDetails.setLayout(new BoxLayout(pnlOrderDetails, BoxLayout.PAGE_AXIS));
-        pnlOrderDetails.setBorder(new EmptyBorder(10, 10, 10, 10));
-        JLabel lbl;
+        pnlOrderDetails.setBorder(new EmptyBorder(10, 60, 10, 60));
+        JLabel lbl, lbl2, lbl3;
         double totalPrice = 0;
         for (Order o : orderList) {
             lbl = new JLabel(o.getItem() + ": " + formatter.format(o.getTotalPrice()));
             pnlOrderDetails.add(lbl);
             totalPrice += o.getTotalPrice();
         }
-        lbl = new JLabel("Total Price: " + formatter.format((totalPrice)));
+        lbl = new JLabel("Subtotal: " + formatter.format(totalPrice));
+        lbl2 = new JLabel("GST 6%: " + formatter.format(totalPrice * 0.06));
+        lbl3 = new JLabel("Total Price Inclusive GST: " + formatter.format(totalPrice * 1.06));
         pnlOrderDetails.add(lbl);
+        pnlOrderDetails.add(lbl2);
+        pnlOrderDetails.add(lbl3);
 
     }
 
@@ -190,7 +248,7 @@ public class Operation {
             totalPrice += o.getTotalPrice();
             orderItems.add(o.getItem());
         }
-
+        totalPrice *= 1.06;
         Transaction t = new Transaction(currentCustomer.getId(), orderItems);
 
         if (totalPaid > totalPrice) {
@@ -198,16 +256,20 @@ public class Operation {
             JOptionPane.showMessageDialog(frame,
                     "Thank you for your payment. Your change is " + formatter.format(totalPaid - totalPrice));
             orderList.clear();
-            frame.setVisible(false);
-            Index.show();
+            frame.dispose();
+            Menu.frame.dispose();
+            ConfirmOrder.frame.dispose();
+            Index.frame.setVisible(true);
 
         } else if (totalPaid == totalPrice) {
             t.write();
             JOptionPane.showMessageDialog(frame,
                     "Thank you for your payment.");
             orderList.clear();
-            frame.setVisible(false);
-            Index.show();
+            frame.dispose();
+            Menu.frame.dispose();
+            ConfirmOrder.frame.dispose();
+            Index.frame.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(frame,
                     "Your payment is not sufficient.Please top up additional " + formatter.format(totalPrice - totalPaid));

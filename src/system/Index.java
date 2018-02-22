@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 
 public class Index implements ActionListener {
     static JFrame frame;
-    JButton btnOrder, btnRegister, btnLogout;
+    JButton btnOrder, btnRegister, btnLogout, btnEdit;
 
     Index() {
         frame = new JFrame();
@@ -28,16 +28,19 @@ public class Index implements ActionListener {
 
         //Items Panel
         JPanel pnlItems = new JPanel();
-        pnlItems.setLayout(new GridLayout(3, 0, 10, 10));
+        pnlItems.setLayout(new GridLayout(4, 0, 10, 10));
         pnlItems.setBorder(new EmptyBorder(10, 10, 10, 10));
         btnOrder = new JButton("Take Order");
         btnRegister = new JButton("Register Customer");
+        btnEdit = new JButton("Edit Customer Details");
         btnLogout = new JButton("Logout");
         btnOrder.addActionListener(this);
         btnRegister.addActionListener(this);
         btnLogout.addActionListener(this);
-        pnlItems.add(btnRegister);
+        btnEdit.addActionListener(this);
         pnlItems.add(btnOrder);
+        pnlItems.add(btnRegister);
+        pnlItems.add(btnEdit);
         pnlItems.add(btnLogout);
 
         frame.add(pnlTitle, BorderLayout.NORTH);
@@ -64,6 +67,12 @@ public class Index implements ActionListener {
             frame.setVisible(false);
         } else if (e.getSource().equals(btnLogout)) {
             Operation.logout(frame);
+        } else if (e.getSource().equals(btnEdit)){
+            String id = JOptionPane.showInputDialog(
+                    frame, "Enter Customer Id");
+            if (id != null){
+                Operation.editCustomer(frame, id);
+            }
         }
     }
 

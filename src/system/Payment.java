@@ -119,7 +119,9 @@ public class Payment implements ActionListener{
             Operation.processPayment(frame, totalAmount);
         }else if (e.getSource().equals(btnBack)){
             Operation.clearOrderList();
-            frame.setVisible(false);
+            frame.dispose();
+            Menu.frame.dispose();
+            ConfirmOrder.frame.dispose();
             Index.frame.setVisible(true);
         }
     }
